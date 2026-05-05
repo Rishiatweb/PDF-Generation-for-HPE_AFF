@@ -165,18 +165,6 @@ print(loader.stats())
 
 ---
 
-## Development
-
-### Branch strategy
-
-Never commit to `main` directly. Use per-stage feature branches:
-
-```
-data-pipeline/stage-1-ingest
-data-pipeline/stage-2-order
-...
-```
-
 ### Testing
 
 ```bash
@@ -192,17 +180,3 @@ HF_DATASETS_OFFLINE=0 pytest data_pipeline/tests/ -v
 GitHub Actions runs on `data-pipeline/**` branches and PRs to `main`. `HF_DATASETS_OFFLINE=1` skips download-dependent tests automatically.
 
 ---
-
-## Key constraints
-
-| Do not | Reason |
-|---|---|
-| Call any external API at runtime | Standalone offline pipeline |
-| Import Azure SDK anywhere | Wrong project — belongs in HPE-AFF |
-| Use `print()` in library code | Use `structlog` |
-| Hardcode absolute file paths | Use `DATA_ROOT` |
-| Commit `data/raw/`, `data/consolidated/`, `data/generated/` | Too large — gitignored |
-| Rewrite `form_harness.py` | Already works — import and call it |
-| Apply Genalog to val or test splits | Contaminates evaluation |
-| Allow RVL-CDIP into fill evaluation | No ground truth — blocked by assertion |
-| Skip writing `pipeline_state.json` | Pipeline resumability depends on it |
