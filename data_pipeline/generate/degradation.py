@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-import shutil
 import time
 from pathlib import Path
 
 import structlog
 
-from data_pipeline import DocumentRecord, FieldRecord
+from data_pipeline import DocumentRecord
 
 log = structlog.get_logger()
 

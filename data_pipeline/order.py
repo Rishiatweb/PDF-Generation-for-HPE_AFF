@@ -5,11 +5,10 @@ from __future__ import annotations
 import hashlib
 import random
 from collections import defaultdict
-from pathlib import Path
 
 import structlog
 
-from data_pipeline import DocumentRecord, FieldRecord
+from data_pipeline import DocumentRecord
 
 log = structlog.get_logger()
 

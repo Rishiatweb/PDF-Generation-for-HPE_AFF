@@ -10,14 +10,11 @@ import json
 import os
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
-from data_pipeline import DocumentRecord, FieldRecord
-from data_pipeline import storage
+from data_pipeline import DocumentRecord, storage
 from data_pipeline.order import compute_quality_score
-from data_pipeline.tests.conftest import hf_offline, _make_record, _make_field
-
+from data_pipeline.tests.conftest import _make_record, hf_offline
 
 # ===========================================================================
 # Stage 1 — Schema + normalisation tests (require downloaded data → @hf_offline)
@@ -119,7 +116,6 @@ def test_split_proportions(mini_records: list[DocumentRecord]) -> None:
     """train ~70%, val ~15%, test ~15% within ±5% tolerance per source."""
     from collections import Counter
     counts = Counter(r.split for r in mini_records)
-    total = len(mini_records)
     # Loose check — fixtures use simplified splits
     assert counts.get("train", 0) >= 1
     assert counts.get("val", 0) >= 1
@@ -251,6 +247,7 @@ def test_genalog_output_is_image(tmp_path: Path) -> None:
         pytest.skip("genalog not installed")
 
     from PIL import Image
+
     from data_pipeline.generate.degradation import DEGRADATION_PROFILES
 
     # Create a tiny test image
@@ -280,8 +277,8 @@ def test_generation_counts(tmp_path: Path) -> None:
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
 
-    from form_harness import generate, SCHEMAS
     from data_pipeline.generate.synthetic import GENERATION_CONFIG
+    from form_harness import SCHEMAS, generate
 
     for schema_name, cfg in GENERATION_CONFIG.items():
         count = cfg["count"]

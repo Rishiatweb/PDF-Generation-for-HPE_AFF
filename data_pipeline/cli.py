@@ -80,7 +80,6 @@ def run(run_all: bool, stage: str | None, seed: int) -> None:
             # Load existing records for downstream stages
             if stg in ("ingest", "order") and not records:
                 try:
-                    import pandas as pd
                     parquet_path = data_root / "consolidated" / "master.parquet"
                     if parquet_path.exists():
                         from data_pipeline import loader
@@ -93,7 +92,7 @@ def run(run_all: bool, stage: str | None, seed: int) -> None:
         t0 = time.monotonic()
 
         if stg == "ingest":
-            from data_pipeline.ingest import funsd, xfund, vrdu, rvlcdip
+            from data_pipeline.ingest import funsd, rvlcdip, vrdu, xfund
 
             all_recs: list = []
             for mod, name in [(funsd, "funsd"), (xfund, "xfund"), (vrdu, "vrdu"), (rvlcdip, "rvlcdip")]:
@@ -192,7 +191,7 @@ def report() -> None:
     from data_pipeline import storage
     m = storage.read_manifest(manifest_path)
 
-    click.echo(f"\nHPE-AFF Dataset Report")
+    click.echo("\nHPE-AFF Dataset Report")
     click.echo(f"Created: {m.get('created_at', 'unknown')}")
     click.echo(f"Seed:    {m.get('seed', 'unknown')}")
     click.echo(f"Total:   {m.get('total_documents', 0):,} documents\n")

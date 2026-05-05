@@ -7,8 +7,7 @@ from pathlib import Path
 
 import structlog
 
-from data_pipeline import DocumentRecord
-from data_pipeline import storage
+from data_pipeline import DocumentRecord, storage
 
 log = structlog.get_logger()
 

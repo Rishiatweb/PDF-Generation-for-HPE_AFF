@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
-from data_pipeline import DocumentRecord, FieldRecord
-from data_pipeline import storage
-
+from data_pipeline import DocumentRecord, FieldRecord, storage
 
 # ---------------------------------------------------------------------------
 # CI-safe skip mark

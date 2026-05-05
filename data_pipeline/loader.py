@@ -10,8 +10,7 @@ from typing import Any, Optional
 
 import structlog
 
-from data_pipeline import DocumentRecord, FieldRecord
-from data_pipeline import storage
+from data_pipeline import DocumentRecord, storage
 
 log = structlog.get_logger()
 
