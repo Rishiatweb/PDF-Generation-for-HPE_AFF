@@ -1,0 +1,61 @@
+name: HPE-AFF Data Pipeline CI
+
+on:
+  push:
+    branches:
+      - 'data-pipeline/**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install system dependencies for Genalog
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq \
+            libpango-1.0-0 libpangoft2-1.0-0 \
+            libgdk-pixbuf2.0-0 libcairo2 \
+            libffi-dev
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with ruff
+        run: ruff check data_pipeline/
+
+      - name: Run test suite
+        env:
+          DATA_ROOT: ./data_ci
+          PIPELINE_SEED: 42
+          PIPELINE_LOG_LEVEL: WARNING
+          HF_DATASETS_OFFLINE: 1
+        run: |
+          pytest data_pipeline/tests/ \
+            -v --tb=short \
+            --cov=data_pipeline \
+            --cov-report=term-missing \
+            --cov-fail-under=80
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: .coverage
